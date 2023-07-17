@@ -47,6 +47,12 @@
       "name": "Little Green Men",
       "image": "http://www.pngmart.com/files/3/Toy-Story-Alien-PNG-File.png",
       "likes": 1
+    },
+    {
+      "name": "Lenny ",
+      "image": "https://static.wikia.nocookie.net/disney/images/0/08/Lenny_004.jpg/revision/latest?cb=20140321155325",
+      "likes": 0,
+      "id": 9
     }
   ]
 }
