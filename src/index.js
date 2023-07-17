@@ -24,11 +24,11 @@ fetch("http://localhost:3000/toys")
 function addCardToCollection(data){
   data.forEach(element => {
     const card = document.createElement("div")
-    card.className = "card"
     const name = document.createElement("h2")
     const image = document.createElement("img")
     const likes = document.createElement("p")
     const button = document.createElement("button")
+    card.className = "card"
     name.textContent = element.name
     image.src = element.image
     image.style.width = "220px"
@@ -39,6 +39,25 @@ function addCardToCollection(data){
     button.id = "[toy_id]"
     card.append(name,image,likes,button)
     toyCollection.append(card)
+
+    button.addEventListener("click", () => {
+      likes.textContent = `${element.likes += 1} likes` 
+
+        const PATCH_OPTIONS ={
+          method: "PATCH",
+          
+          headers:{
+            "Content-Type": "application/json",
+            "Accept": "application/json"
+          },
+
+          body: JSON.stringify({
+            "likes": element.likes
+          })
+        }
+
+      fetch(`http://localhost:3000/toys/${element.id}`,PATCH_OPTIONS)
+    })
   });
 }
 
@@ -67,9 +86,4 @@ toyForm.addEventListener("submit", event => {
 
     toyForm.reset()
 })
-
-toyCollection.addEventListener("click", ()=>{
-  
-})
-
 
