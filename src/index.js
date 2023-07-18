@@ -19,46 +19,53 @@ const toyForm = document.querySelector(".add-toy-form")
 
 fetch("http://localhost:3000/toys")
 .then(response => response.json())
-.then(data => addCardToCollection(data))
+.then(addCardsToCollection)
 
-function addCardToCollection(data){
+function addCardsToCollection(data){
   data.forEach(element => {
-    const card = document.createElement("div")
-    const name = document.createElement("h2")
-    const image = document.createElement("img")
-    const likes = document.createElement("p")
-    const button = document.createElement("button")
-    card.className = "card"
-    name.textContent = element.name
-    image.src = element.image
-    image.style.width = "220px"
-    image.style.margin = "10px"
-    likes.textContent = `${element.likes} likes`
-    button.textContent = "Like"
-    button.className = "like-btn"
-    button.id = "[toy_id]"
-    card.append(name,image,likes,button)
-    toyCollection.append(card)
-
-    button.addEventListener("click", () => {
-      likes.textContent = `${element.likes += 1} likes` 
-
-        const PATCH_OPTIONS ={
-          method: "PATCH",
-          
-          headers:{
-            "Content-Type": "application/json",
-            "Accept": "application/json"
-          },
-
-          body: JSON.stringify({
-            "likes": element.likes
-          })
-        }
-
-      fetch(`http://localhost:3000/toys/${element.id}`,PATCH_OPTIONS)
-    })
+    addOneSingleCard(element)
   });
+}
+
+function addOneSingleCard(cardDataObj) {
+  const card = document.createElement("div")
+  const name = document.createElement("h2")
+  const image = document.createElement("img")
+  const likes = document.createElement("p")
+  const button = document.createElement("button")
+  card.className = "card"
+  name.textContent = cardDataObj.name
+  image.src = cardDataObj.image
+  image.style.width = "220px"
+  image.style.margin = "10px"
+  likes.textContent = `${cardDataObj.likes} likes`
+  button.textContent = "Like"
+  button.className = "like-btn"
+  button.id = "[toy_id]"
+  card.append(name,image,likes,button)
+  toyCollection.append(card)
+  likeButton(cardDataObj,button,likes)
+}
+
+function likeButton(cardDataObj,button,likes){
+  button.addEventListener("click", () => {
+    likes.textContent = `${cardDataObj.likes += 1} likes` 
+
+    const PATCH_OPTIONS ={
+      method: "PATCH",
+        
+      headers:{
+        "Content-Type": "application/json",
+        "Accept": "application/json"
+      },
+
+      body: JSON.stringify({
+        "likes": cardDataObj.likes
+      })
+    }
+
+    fetch(`http://localhost:3000/toys/${cardDataObj.id}`,PATCH_OPTIONS)
+  })
 }
 
 toyForm.addEventListener("submit", event => {
@@ -82,7 +89,7 @@ toyForm.addEventListener("submit", event => {
 
     fetch("http://localhost:3000/toys",POST_OPTIONS)
     .then(response => response.json())
-    .then(data => addCardToCollection([data]))
+    .then(addOneSingleCard)
 
     toyForm.reset()
 })
